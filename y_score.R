@@ -10,7 +10,7 @@ get_comparison_congress <- function(congress){
   # curl command for pulling from ProPublica Congress API.
   # This command gets the names of all the congresspeople.
   cmd <- paste0('curl "https://api.propublica.org/congress/v1/',congress,'/house/members.json"
-  -H "X-API-Key: cBkzyrgs6k7uCIXKZM5Jv9FXRQO2AjHUKk4KMvP2"')
+  -H "X-API-Key: "')
   
   # Make the request here.
   members_request <- straighten(cmd) %>% make_req()
@@ -42,7 +42,7 @@ get_comparison_congress <- function(congress){
   # Make request of the API for comparisons between "other" congresspeople and Congressman Yarmuth.
   others %<>% 
     mutate(comparisons_txt = paste0('curl "https://api.propublica.org/congress/v1/members/',y,'/votes/',id,'/',congress,'/house.json" 
-                                    -H "X-API-Key: cBkzyrgs6k7uCIXKZM5Jv9FXRQO2AjHUKk4KMvP2"')) %>%
+                                    -H "X-API-Key: "')) %>%
     mutate(comparisons_request = straighten(comparisons_txt) %>% make_req())
   
   # Convert all the responses into data that we can use
