@@ -1,0 +1,61 @@
+---
+title: "The Yarmuth Score"
+author: "Robert Kahne"
+date: "October 9, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+load('y_comparison.rda')
+```
+
+![John Yarmuth](./img/yarmuth.jpg)
+
+This is John Yarmuth, Kentucky's third district Congressman.  He has been the only Democrat in Kentucky's congressional delegation since Ben Chandler lost reelection to the sixth district seat in 2012. Yarmuth is, without a doubt, the most liberal member of Congress to have served from Kentucky this century.
+
+While the rest of Kentucky's delegation has been more conservative than Congressman Yarmuth, I don't think anyone has ever done any real work to measure the *magnitude* by which Congressman Yarmuth is the most liberal.  So, I did it!  To accomplish this task, I used the [Pro Publica Congress API](https://projects.propublica.org/api-docs/congress-api/).  This is a great tool, and even provides the ability to automatically compare two congresspeople.  All the data for these comparisons comes directly from that API.
+
+## District 6
+
+```{r message=FALSE, warning=F, echo=F, out.width="250px"}
+
+knitr::include_graphics(c("./img/chandler.jpg", "./img/barr.jpg"))
+```
+
+From 2007 until 2013, the sixth district was represented by Ben Chandler -- the only Democrat from Kentucky with whom Congressman Yarmuth has served.  Since 2013, the district has been reresented by Andy Barr.  Chandler was considered to be significantly more conservative than John Yarmuth, but he ended up voting with Congressman Yarmuth nearly 90% of the time in total.  Congressman Barr has voted with Congressman Yarmuth significantly fewer times than Congressman Chandler.  The sixth district is Central Kentucky.
+
+ 
+> Ben Chandler's `Yarmuth Score`: 89%
+
+> Andy Barr's `Yarmuth Score`: 25% 
+
+
+The chart below shows the trend over time for the sixth district congressperson's record of voting with Congressman Yarmuth.  During Congressman Chandler's last term, he voted less and less with Congressman Yarmuth.  The last Congress in which Congressman Chandler served was the first Democratically led House since 1994.  This meant that more liberal legislation made the floor.  If I were to venture a guess, I would assume that this was the reason that Congressman Chandler's `Yarmuth Score` slipped so much in his last term.
+
+The sixth district is a good case study in the difference between a "Blue Dog Democrat" and a Republican.  While it's true that Congressman Chandler voted less with Congressman Yarmuth as time went along, Congressman Barr almost never votes with Congressman Yarmuth -- Congressman Barr voted against Congressman Yarmuth 62% more in his first term than Congressman Chandler did in his final term.
+
+```{r message=FALSE, warning=F, echo=F, fig.align='center'}
+comparison %>% 
+  mutate(agree_pct = (common_votes - disagree_votes) / common_votes) %>% 
+  filter(district == 6) %>% 
+  ggplot(aes(x = congress, y = agree_pct, fill = last_name, label = paste0(round(agree_pct, 2) * 100, '%'))) +
+  geom_bar(stat = 'identity') +
+  geom_label(show.legend = F) +
+  scale_fill_manual(values = c('Chandler' = 'blue', 'Barr' = 'red')) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = 'Sixth District Yarmuth Score By Congress',
+       x = 'Congress', y = 'Yarmuth Score') +
+  theme_minimal() + 
+  theme(legend.title = element_blank())
+```
+
+## District 5
+
+![Harold "Hal" Rogers](./img/rogers.jpg)
+
+Hal Rogers is the only Congressperson from Kentucky who has served longer than Congresman Yarmuth.  He represents the fifth district, which is in the Eastern part of the state.
+
+> Hal Rogers' `Yarmuth Score`: 39%
+
+Rogers' `Yarmuth Score` is the highest among Kentucky Congresspeople currently serving.  
